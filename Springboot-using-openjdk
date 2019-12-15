@@ -1,4 +1,29 @@
+
+Create MongoDB
+
+
+./oc new-app -e MONGODB_USER=mongouser -e MONGODB_PASSWORD=VEER2019 -e MONGODB_DATABASE=restaurant_db -e MONGODB_ADMIN_PASSWORD=VEER2019 registry.access.redhat.com/rhscl/mongodb-26-rhel7 --name mongodb -l microservice=rethatapi1
+
+
 Springboot using openjdk
+1.
+./oc import-image java:8 --from=registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift --confirm
+2.
+
+./oc new-app -e RESTAURANT_APPLICATION_DOMAIN=http://rethatapi1:8080 -e MONGODB_DATABASE=restaurant_db -e MONGODB_PASSWORD=VEER2019 -e MONGODB_USER=mongouser -e DATABASE_SERVICE_NAME=mongodb -e authenticationDatabase=restaurant_db 'java:8~https://github.com/rajeshmunjal/restaurant-service.git' --name='rethatapi1' -l microservice=rethatapi1
+
+./oc new-app -e RESTAURANT_APPLICATION_DOMAIN=http://rethatapi1:8080 'java:8~https://github.com/rajeshmunjal/restaurant-service.git' --name='rethatapi1' -l microservice=rethatapi1
+
+3.
+./oc logs -f bc/rethatapi1
+4.
+./oc rollout status -w dc/rethatapi1
+5.
+./oc expose svc/rethatapi1
+
+6.
+open http://$(./oc get route rethatapi1 -o jsonpath='{.spec.host}{"\n"}')
 
 
-oc import-image java:8 --from=registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift --confirm
+
+mongo --username mongouser --password VEER2019 --authenticationDatabase restaurant_db
